@@ -1,0 +1,14 @@
+net:
+  pool:
+    core-size: 8
+    maximum-size: 16
+    time-unit: SECONDS
+    wait-queue-size: 16
+    keep-alive-time: 0
+  port:
+    server-port: 21
+    transfer-port-begin: 55000
+    transfer-port-end: 56000
+  func:
+    allow-anonymous: true
+
