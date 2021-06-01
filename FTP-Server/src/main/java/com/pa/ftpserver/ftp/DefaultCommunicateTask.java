@@ -54,7 +54,7 @@ public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
 
     @Override
     public void run() {
-        try {
+        try (clientSocket) {
             doSendMessage("220 Service ready for new user.\r\n");
             while (!clientSocket.isClosed()) {
                 // read message
@@ -77,7 +77,9 @@ public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
     }
 
     public void close() throws Exception {
-        clientSocket.close();
+        if (!clientSocket.isClosed()) {
+            clientSocket.close();
+        }
     }
 
     private void doSendMessage(String message) {
