@@ -29,11 +29,9 @@ public class InitiativeDataTransferTask implements DataTransferTask, AutoCloseab
 
     public InitiativeDataTransferTask(String host, int port) {
         try {
-            // TODO localhost -> host
-            socket = new Socket("localhost", port);
+            socket = new Socket(host, port);
         } catch (IOException e) {
             log.error("IOException occurred when connecting to [{}:{}]", host, port);
-            log.error("IOException", e);
         }
     }
 

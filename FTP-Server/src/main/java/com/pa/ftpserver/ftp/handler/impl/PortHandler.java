@@ -26,7 +26,7 @@ public class PortHandler implements Handler {
     @Override
     public String handle(String message, String principal) {
         // e.g. PORT 127,0,0,1,224,22
-        String[] address = message.substring(message.indexOf(' ')).split(",");
+        String[] address = message.substring(message.indexOf(' ') + 1).split(",");
         if (address.length != 6) {
             return ResponseMessage.INVALID_PARAM.getMessage();
         }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @author pa
  * @date 2021/6/15 16:35
  */
-@Component("FTP_HANDLER_OPT")
+@Component("FTP_HANDLER_OPTS")
 public class OptionHandler implements Handler {
 
     @Override
