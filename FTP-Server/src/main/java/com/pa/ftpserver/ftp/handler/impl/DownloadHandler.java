@@ -1,37 +1,28 @@
 package com.pa.ftpserver.ftp.handler.impl;
 
-import com.pa.ftpserver.config.FunctionalProperties;
 import com.pa.ftpserver.ftp.constant.ResponseMessage;
 import com.pa.ftpserver.ftp.handler.Handler;
 import com.pa.ftpserver.ftp.task.InitiativeDataTransferTask;
-import com.pa.ftpserver.ftp.task.consumer.DirectoryConsumer;
+import com.pa.ftpserver.ftp.task.consumer.DownloadConsumer;
 import com.pa.ftpserver.ftp.util.PreAuthorize;
+import com.pa.ftpserver.ftp.util.PreCheckMessage;
 import com.pa.ftpserver.net.DataExecutorService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author pa
- * @date 2021/6/15 21:50
+ * @date 2021/6/16 00:35
  */
-@Component("FTP_HANDLER_LIST")
+@Component("FTP_HANDLER_RETR")
 @PreAuthorize
-public class DirectoryHandler implements Handler {
-
-    private static final Map<String, File> fileMap = new ConcurrentHashMap<>(64);
+@PreCheckMessage
+public class DownloadHandler implements Handler {
 
     @Resource
     private DataExecutorService dataExecutorService;
-
-    private static String basePath = "";
-
-    public DirectoryHandler(FunctionalProperties functionalProperties) {
-        basePath = functionalProperties.getBasePath();
-    }
 
     @Override
     public String handle(String message, String principal) {
@@ -39,13 +30,13 @@ public class DirectoryHandler implements Handler {
         if (task == null) {
             return ResponseMessage.CONNECTION_FAILED.getMessage();
         }
-        File file = getFile(principal);
-        task.setConsumer(new DirectoryConsumer(file));
+        File file = DirectoryHandler.getFile(principal);
+        file = new File(file, message.substring(message.indexOf(' ') + 1));
+        if (!file.exists()) {
+            return ResponseMessage.FILE_NOT_FOUND.getMessage();
+        }
+        task.setConsumer(new DownloadConsumer(file));
         dataExecutorService.execute(task);
         return null;
-    }
-
-    public static File getFile(String principal) {
-        return fileMap.computeIfAbsent(principal, (ignore) -> new File(basePath));
     }
 }

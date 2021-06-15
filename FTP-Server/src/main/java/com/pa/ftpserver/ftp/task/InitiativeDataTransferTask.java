@@ -1,11 +1,11 @@
 package com.pa.ftpserver.ftp.task;
 
+import com.pa.ftpserver.ftp.constant.ResponseMessage;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.lang.ref.WeakReference;
 import java.net.Socket;
 import java.util.function.Consumer;
 
@@ -27,12 +27,25 @@ public class InitiativeDataTransferTask implements DataTransferTask, AutoCloseab
     @Setter
     private Consumer<Void> finishHook;
 
-    public InitiativeDataTransferTask(String host, int port) {
+    public InitiativeDataTransferTask(String host, int port, String principal) {
         try {
             socket = new Socket(host, port);
         } catch (IOException e) {
             log.error("IOException occurred when connecting to [{}:{}]", host, port);
         }
+        WeakReference<DefaultCommunicateTask> weakReference = DefaultCommunicateTask.taskMap.get(principal);
+        this.startHook = (ignore) -> {
+            DefaultCommunicateTask communicateTask = weakReference.get();
+            if (communicateTask != null) {
+                communicateTask.sendMessage(ResponseMessage.OPEN_CHANNEL);
+            }
+        };
+        this.finishHook = (ignore) -> {
+            DefaultCommunicateTask communicateTask = weakReference.get();
+            if (communicateTask != null) {
+                communicateTask.sendMessage(ResponseMessage.TRANSFER_COMPLETE);
+            }
+        };
     }
 
     @Override

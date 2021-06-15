@@ -11,4 +11,5 @@ net:
     transfer-port-end: 56000
   func:
     allow-anonymous: true
+    base-path: /Users/pa/Desktop
 

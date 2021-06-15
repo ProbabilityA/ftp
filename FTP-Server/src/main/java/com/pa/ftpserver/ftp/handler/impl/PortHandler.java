@@ -5,7 +5,6 @@ import com.pa.ftpserver.ftp.handler.Handler;
 import com.pa.ftpserver.ftp.task.InitiativeDataTransferTask;
 import com.pa.ftpserver.ftp.util.PreAuthorize;
 import com.pa.ftpserver.ftp.util.PreCheckMessage;
-import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -43,7 +42,7 @@ public class PortHandler implements Handler {
                 address[2] +
                 POINT +
                 address[3];
-        InitiativeDataTransferTask task = new InitiativeDataTransferTask(host, port);
+        InitiativeDataTransferTask task = new InitiativeDataTransferTask(host, port, principal);
         taskMap.put(principal, task);
         return ResponseMessage.PORT.getMessage();
     }
