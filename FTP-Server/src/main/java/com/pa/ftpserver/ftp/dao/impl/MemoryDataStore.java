@@ -18,7 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class MemoryDataStore implements DataStore {
 
-    private final Map<String, WrappedValue> map = new ConcurrentHashMap<>(128);
+    private final Map<String, WrappedValue> map = new ConcurrentHashMap<>(128) {{
+        WrappedValue wrappedValue = new WrappedValue();
+        wrappedValue.setValue("123456");
+        put("USER:pa", wrappedValue);
+        put("USER:chenbohan", wrappedValue);
+    }};
 
     @Override
     public void put(String key, String value) {
@@ -35,7 +40,7 @@ public class MemoryDataStore implements DataStore {
             return null;
         }
 
-        if (wrappedValue.getExpireTime().isAfter(LocalDateTime.now())) {
+        if (wrappedValue.getExpireTime() == null || wrappedValue.getExpireTime().isAfter(LocalDateTime.now())) {
             return wrappedValue.getValue();
         }
 
@@ -48,7 +53,7 @@ public class MemoryDataStore implements DataStore {
     public void removeEntry() {
         log.info("start to clear expired value...");
         LocalDateTime now = LocalDateTime.now();
-        map.entrySet().removeIf(entry -> entry.getValue().getExpireTime().isBefore(now));
+        map.entrySet().removeIf(entry -> entry.getValue().getExpireTime() != null && entry.getValue().getExpireTime().isBefore(now));
     }
 
     @Data

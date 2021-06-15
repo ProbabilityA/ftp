@@ -6,13 +6,14 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author pa
- * @date 2021/5/31 18:11
+ * @date 2021/6/15 16:35
  */
-@Component
-public class UnsupportedOperationHandler implements Handler {
+@Component("FTP_HANDLER_OPT")
+public class OptionHandler implements Handler {
 
     @Override
     public String handle(String message, String principal) {
-        return ResponseMessage.NOT_SUPPORTED.getMessage();
+        // Windows FTP may send 'OPT UTF8 ON'
+        return ResponseMessage.OKAY.getMessage();
     }
 }

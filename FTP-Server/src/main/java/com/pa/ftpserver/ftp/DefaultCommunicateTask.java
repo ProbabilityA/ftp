@@ -1,5 +1,7 @@
 package com.pa.ftpserver.ftp;
 
+import com.pa.ftpserver.ftp.constant.ResponseMessage;
+import com.pa.ftpserver.ftp.entity.QuitException;
 import com.pa.ftpserver.ftp.resolver.Resolver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,10 +33,7 @@ public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
             this.writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), StandardCharsets.UTF_8));
         } catch (IOException e) {
             log.error("IOException occurred when task begin, connection will be closed", e);
-        } catch (Exception ignore) {
-            // AutoCloseable::close throws
         }
-        doSendMessage("Connection established");
     }
 
     @Override
@@ -54,16 +53,17 @@ public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
 
     @Override
     public void run() {
-        try (clientSocket) {
-            doSendMessage("220 Service ready for new user.\r\n");
-            while (!clientSocket.isClosed()) {
+        try (this) {
+            doSendMessage(ResponseMessage.SERVICE_READY.getMessage());
+            boolean run = true;
+            while (!clientSocket.isClosed() && run) {
                 // read message
                 String message = reader.readLine();
-                log.info("receive message from [{}]: {}", principal(), message);
-                if (message.startsWith("OPTS")) {
-                    doSendMessage("211 Okay.\r\n");
+                if (message == null) {
+                    run = false;
                     continue;
                 }
+                log.info("receive message from [{}]: {}", principal(), message);
 
                 // resolve and handle message
                 String respondMessage = resolver.resolve(message, principal());
@@ -71,15 +71,22 @@ public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
                 // respond message
                 doSendMessage(respondMessage);
             }
-        } catch(IOException e) {
-            log.error("IOException occurred when reading message, connection will be closed", e);
+        } catch (IOException e) {
+            log.error("IOException occurred when reading message, connection [{}] will be closed", principal());
+        } catch (QuitException e) {
+            // 'QUIT' command throws
+        } catch (Exception e) {
+            // AutoCloseable throws
         }
     }
 
     public void close() throws Exception {
+        writer.close();
+        reader.close();
         if (!clientSocket.isClosed()) {
             clientSocket.close();
         }
+        log.info("[{}] quit peacefully", principal());
     }
 
     private void doSendMessage(String message) {
