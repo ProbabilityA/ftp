@@ -1,4 +1,4 @@
-package com.pa.ftpserver.ftp;
+package com.pa.ftpserver.ftp.task;
 
 import com.pa.ftpserver.ftp.constant.ResponseMessage;
 import com.pa.ftpserver.ftp.entity.QuitException;
@@ -7,8 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.lang.ref.WeakReference;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author pa
@@ -16,6 +19,8 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
+
+    public static final Map<String, WeakReference<DefaultCommunicateTask>> taskMap = new ConcurrentHashMap<>(64);
 
     private final Socket clientSocket;
     private BufferedReader reader;
@@ -26,7 +31,7 @@ public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
 
     public DefaultCommunicateTask(Socket clientSocket) {
         this.clientSocket = clientSocket;
-
+        taskMap.put(principal(), new WeakReference<>(this));
         // build message reader
         try {
             this.reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), StandardCharsets.UTF_8));
@@ -42,8 +47,8 @@ public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
     }
 
     @Override
-    public void sendMessage(String message) {
-
+    public void sendMessage(ResponseMessage message) {
+        doSendMessage(message.getMessage());
     }
 
     @Override
@@ -68,8 +73,10 @@ public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
                 // resolve and handle message
                 String respondMessage = resolver.resolve(message, principal());
 
-                // respond message
-                doSendMessage(respondMessage);
+                // respond message, null occurs when client send 'LIST' command or others
+                if (respondMessage != null) {
+                    doSendMessage(respondMessage);
+                }
             }
         } catch (IOException e) {
             log.error("IOException occurred when reading message, connection [{}] will be closed", principal());

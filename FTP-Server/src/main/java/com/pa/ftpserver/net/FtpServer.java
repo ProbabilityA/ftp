@@ -1,7 +1,7 @@
 package com.pa.ftpserver.net;
 
-import com.pa.ftpserver.ftp.CommunicateTask;
-import com.pa.ftpserver.ftp.DefaultCommunicateTask;
+import com.pa.ftpserver.ftp.task.CommunicateTask;
+import com.pa.ftpserver.ftp.task.DefaultCommunicateTask;
 import com.pa.ftpserver.net.properties.ServerPortProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;

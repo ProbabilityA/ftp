@@ -1,6 +1,7 @@
 package com.pa.ftpserver.net;
 
-import com.pa.ftpserver.ftp.CommunicateTask;
+import com.pa.ftpserver.ftp.constant.ResponseMessage;
+import com.pa.ftpserver.ftp.task.CommunicateTask;
 import com.pa.ftpserver.net.properties.ThreadPoolProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class FtpExecutorService {
                 (runnable, executor) -> {
                     if (runnable instanceof CommunicateTask) {
                         CommunicateTask task = (CommunicateTask) runnable;
-                        task.sendMessage("Communicate task rejected");
+                        task.sendMessage(ResponseMessage.TOO_MANY_USERS);
                         log.warn("Communicate task rejected, principal is {}", task.principal());
                     } else {
                         log.warn("Unknown Task rejected");

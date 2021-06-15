@@ -30,7 +30,7 @@ public class AuthUtil {
     }
 
     public String get(String principal) {
-        return dataStore.get(String.join(USERNAME, principal));
+        return dataStore.get(String.join(":", USERNAME, principal));
     }
 
     public void setLoginStatus(String principal, String username) {

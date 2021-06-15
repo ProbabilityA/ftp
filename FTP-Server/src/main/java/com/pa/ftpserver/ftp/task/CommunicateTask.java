@@ -1,4 +1,6 @@
-package com.pa.ftpserver.ftp;
+package com.pa.ftpserver.ftp.task;
+
+import com.pa.ftpserver.ftp.constant.ResponseMessage;
 
 /**
  * @author pa
@@ -16,7 +18,7 @@ public interface CommunicateTask extends Runnable {
      *
      * @param message message to be sent
      */
-    void sendMessage(String message);
+    void sendMessage(ResponseMessage message);
 
     /**
      * Get principal of the task
