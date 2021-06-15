@@ -8,5 +8,6 @@ public enum AuthorizationConstant {
 
     NOT_LOGIN, INPUTTING_PASSWORD, SUCCESS;
 
-    AuthorizationConstant() {}
+    AuthorizationConstant() {
+    }
 }
