@@ -37,7 +37,7 @@ public class DirectoryConsumer implements Consumer<Socket> {
 
     @Override
     public void accept(Socket socket) {
-        try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.US_ASCII))) {
+        try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8))) {
             if (!file.exists()) {
                 return;
             }
@@ -70,7 +70,7 @@ public class DirectoryConsumer implements Consumer<Socket> {
                         .append(localDate.getSecond())
                         .append(SPLIT_SEQUENCE)
                         .append(path.getFileName())
-                        .append("\n");
+                        .append("\r\n");
             }
             if (builder.length() != 0) {
                 writer.write(builder.toString());
