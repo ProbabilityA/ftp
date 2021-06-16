@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 @Slf4j
 public class InitiativeDataTransferTask implements DataTransferTask, AutoCloseable {
 
-    private Socket socket;
+    private final Socket socket;
 
     @Setter
     private Consumer<Socket> consumer;
