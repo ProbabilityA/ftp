@@ -31,6 +31,7 @@ public class ChangeDirectoryHandler implements Handler {
 
         File file = DirectoryHandler.getFile(principal);
         File targetFile = new File(file, target);
+        // directory not exist
         if (!targetFile.exists() || !targetFile.isDirectory()) {
             return ResponseMessage.DIRECTORY_NOT_FOUND.getMessage();
         }
@@ -39,6 +40,7 @@ public class ChangeDirectoryHandler implements Handler {
         try {
             path = targetFile.getCanonicalPath();
         } catch (IOException e) {
+            // force it back to base directory
             path = "";
         }
 

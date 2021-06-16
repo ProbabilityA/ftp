@@ -27,12 +27,8 @@ public class InitiativeDataTransferTask implements DataTransferTask, AutoCloseab
     @Setter
     private Consumer<Void> finishHook;
 
-    public InitiativeDataTransferTask(String host, int port, String principal) {
-        try {
-            socket = new Socket(host, port);
-        } catch (IOException e) {
-            log.error("IOException occurred when connecting to [{}:{}]", host, port);
-        }
+    public InitiativeDataTransferTask(String host, int port, String principal) throws IOException {
+        socket = new Socket(host, port);
         WeakReference<DefaultCommunicateTask> weakReference = DefaultCommunicateTask.taskMap.get(principal);
         this.startHook = (ignore) -> {
             DefaultCommunicateTask communicateTask = weakReference.get();

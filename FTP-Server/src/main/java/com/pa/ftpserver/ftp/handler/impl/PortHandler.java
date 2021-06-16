@@ -5,8 +5,10 @@ import com.pa.ftpserver.ftp.handler.Handler;
 import com.pa.ftpserver.ftp.task.InitiativeDataTransferTask;
 import com.pa.ftpserver.ftp.util.PreAuthorize;
 import com.pa.ftpserver.ftp.util.PreCheckMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component("FTP_HANDLER_PORT")
 @PreAuthorize
 @PreCheckMessage
+@Slf4j
 public class PortHandler implements Handler {
 
     public static final Map<String, InitiativeDataTransferTask> taskMap = new ConcurrentHashMap<>(64);
@@ -42,7 +45,14 @@ public class PortHandler implements Handler {
                 address[2] +
                 POINT +
                 address[3];
-        InitiativeDataTransferTask task = new InitiativeDataTransferTask(host, port, principal);
+        InitiativeDataTransferTask task;
+        try {
+            task = new InitiativeDataTransferTask(host, port, principal);
+        } catch (IOException e) {
+            log.error("IOException occurred when connecting to [{}:{}]", host, port);
+            return ResponseMessage.CONNECTION_FAILED.getMessage();
+        }
+        // successful connect
         taskMap.put(principal, task);
         return ResponseMessage.PORT.getMessage();
     }
