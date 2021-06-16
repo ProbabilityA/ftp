@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author pa
@@ -27,27 +28,25 @@ public class ChangeDirectoryHandler implements Handler {
             return ResponseMessage.CWD_SUCCESS.getMessage();
         }
         String target = message.substring(spaceIndex).trim();
-        if (".".equals(target)) {
-            return ResponseMessage.CWD_SUCCESS.getMessage();
-        }
 
         File file = DirectoryHandler.getFile(principal);
-        if ("..".equals(target)) {
-            // back to parent directory
-            if (!functionalProperties.getBasePath().equals(file.getAbsolutePath())) {
-                File parentFile = file.getAbsoluteFile().getParentFile();
-                DirectoryHandler.setFile(principal, parentFile);
-            }
-            return ResponseMessage.CWD_SUCCESS.getMessage();
-        } else {
-            // go to child directory
-            file = new File(file, target);
-            if (file.exists() && file.isDirectory()) {
-                DirectoryHandler.setFile(principal, file);
-                return ResponseMessage.CWD_SUCCESS.getMessage();
-            } else {
-                return ResponseMessage.DIRECTORY_NOT_FOUND.getMessage();
-            }
+        File targetFile = new File(file, target);
+        if (!targetFile.exists() || !targetFile.isDirectory()) {
+            return ResponseMessage.DIRECTORY_NOT_FOUND.getMessage();
         }
+
+        String path;
+        try {
+            path = targetFile.getCanonicalPath();
+        } catch (IOException e) {
+            path = "";
+        }
+
+        // check path
+        if (!path.startsWith(functionalProperties.getBasePath())) {
+            targetFile = new File(functionalProperties.getBasePath());
+        }
+        DirectoryHandler.setFile(principal, targetFile);
+        return ResponseMessage.CWD_SUCCESS.getMessage();
     }
 }

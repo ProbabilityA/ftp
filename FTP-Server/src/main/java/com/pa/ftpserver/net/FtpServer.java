@@ -35,7 +35,7 @@ public class FtpServer {
                 try {
                     // block to wait for new connection
                     Socket client = server.accept();
-                    log.info("Client socket {} connected", client.getInetAddress().getHostAddress());
+                    log.info("Client socket [{}:{}] connected", client.getInetAddress().getHostAddress(), client.getPort());
                     // create runnable task
                     CommunicateTask task = new DefaultCommunicateTask(client);
                     // autowire resolver
