@@ -48,4 +48,8 @@ public class DirectoryHandler implements Handler {
     public static File getFile(String principal) {
         return fileMap.computeIfAbsent(principal, (ignore) -> new File(basePath));
     }
+
+    public static void setFile(String principal, File file) {
+        fileMap.put(principal, file);
+    }
 }

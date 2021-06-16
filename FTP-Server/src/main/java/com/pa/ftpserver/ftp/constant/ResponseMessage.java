@@ -14,6 +14,7 @@ public enum ResponseMessage {
     QUIT("221 Goodbye.\r\n"),
     TRANSFER_COMPLETE("226 Transfer complete.\r\n"),
     LOGIN_PROCEED("230 User logged in, proceed.\r\n"),
+    CWD_SUCCESS("250 CWD command successful.\r\n"),
 
     NEED_PASSWORD("331 User name okay, need password.\r\n"),
     NEED_ACCOUNT("332 Need account for login.\r\n"),
@@ -25,6 +26,7 @@ public enum ResponseMessage {
     BAD_COMMAND("503 Bad sequence of commands.\r\n"),
     LOGIN_FAILED("530 Login or password incorrect!\r\n"),
     FILE_NOT_FOUND("550 Requested action not taken, file not found.\r\n"),
+    DIRECTORY_NOT_FOUND("550 Requested action not taken, directory not found.\r\n"),
 
     TOO_MANY_USERS("10068 Too many users, server is full.\r\n")
     ;

@@ -20,9 +20,10 @@ public class FunctionalProperties {
 
     @PostConstruct
     public void checkPath() {
-        File file = new File(basePath);
-        if (!file.exists() || !file.isDirectory()) {
+        File baseFile = new File(basePath).getAbsoluteFile();
+        if (!baseFile.exists() || !baseFile.isDirectory()) {
             throw new IllegalArgumentException("Base path not exist or isn't directory!");
         }
+        this.basePath = baseFile.getAbsolutePath();
     }
 }

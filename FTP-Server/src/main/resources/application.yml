@@ -11,5 +11,5 @@ net:
     transfer-port-end: 56000
   func:
     allow-anonymous: true
-    base-path: /Users/pa/Desktop
+    base-path: /Users/pa/apache-tomcat-9.0.46
 
