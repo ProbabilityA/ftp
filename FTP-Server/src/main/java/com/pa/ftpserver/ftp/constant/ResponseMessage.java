@@ -11,8 +11,10 @@ public enum ResponseMessage {
     PORT("200 PORT command successful.\r\n"),
     SERVICE_READY("220 Service ready for new user.\r\n"),
     OKAY("211 Okay.\r\n"),
+    VERSION("215 UNIX Type: L8.\r\n"),
     QUIT("221 Goodbye.\r\n"),
     TRANSFER_COMPLETE("226 Transfer complete.\r\n"),
+    PASSIVE_MODE("227 Entering Passive Mode (%s,%d,%d)\r\n"),
     LOGIN_PROCEED("230 User logged in, proceed.\r\n"),
     CWD_SUCCESS("250 CWD command successful.\r\n"),
 

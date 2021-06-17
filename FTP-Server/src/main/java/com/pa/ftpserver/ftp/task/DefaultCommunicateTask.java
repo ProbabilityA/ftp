@@ -11,6 +11,7 @@ import java.lang.ref.WeakReference;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -103,5 +104,16 @@ public class DefaultCommunicateTask implements CommunicateTask, AutoCloseable {
         } catch (IOException e) {
             log.error("IOException occurred when sending message", e);
         }
+    }
+
+    public static String getLocalAddress(String principal) {
+        WeakReference<DefaultCommunicateTask> weakReference = taskMap.get(principal);
+        DefaultCommunicateTask task = Optional.ofNullable(weakReference)
+                .map(WeakReference::get)
+                .orElse(null);
+        if (task == null) {
+            return null;
+        }
+        return task.clientSocket.getLocalAddress().getHostAddress();
     }
 }

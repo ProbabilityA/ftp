@@ -2,7 +2,7 @@ package com.pa.ftpserver.ftp.handler.impl;
 
 import com.pa.ftpserver.ftp.constant.ResponseMessage;
 import com.pa.ftpserver.ftp.handler.Handler;
-import com.pa.ftpserver.ftp.task.InitiativeDataTransferTask;
+import com.pa.ftpserver.ftp.task.DataTransferTask;
 import com.pa.ftpserver.ftp.task.consumer.DownloadConsumer;
 import com.pa.ftpserver.ftp.util.PreAuthorize;
 import com.pa.ftpserver.ftp.util.PreCheckMessage;
@@ -26,7 +26,7 @@ public class DownloadHandler implements Handler {
 
     @Override
     public String handle(String message, String principal) {
-        InitiativeDataTransferTask task = PortHandler.taskMap.get(principal);
+        DataTransferTask task = PortHandler.taskMap.remove(principal);
         if (task == null) {
             return ResponseMessage.CONNECTION_FAILED.getMessage();
         }
@@ -35,7 +35,7 @@ public class DownloadHandler implements Handler {
         if (!file.exists() && !file.isFile()) {
             return ResponseMessage.FILE_NOT_FOUND.getMessage();
         }
-        task.setConsumer(new DownloadConsumer(file));
+        task.setSocketConsumer(new DownloadConsumer(file));
         dataExecutorService.execute(task);
         return null;
     }

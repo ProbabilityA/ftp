@@ -2,6 +2,7 @@ package com.pa.ftpserver.ftp.handler.impl;
 
 import com.pa.ftpserver.ftp.constant.ResponseMessage;
 import com.pa.ftpserver.ftp.handler.Handler;
+import com.pa.ftpserver.ftp.task.DataTransferTask;
 import com.pa.ftpserver.ftp.task.InitiativeDataTransferTask;
 import com.pa.ftpserver.ftp.util.PreAuthorize;
 import com.pa.ftpserver.ftp.util.PreCheckMessage;
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class PortHandler implements Handler {
 
-    public static final Map<String, InitiativeDataTransferTask> taskMap = new ConcurrentHashMap<>(64);
+    public static final Map<String, DataTransferTask> taskMap = new ConcurrentHashMap<>(64);
     private static final char POINT = '.';
 
     @Override

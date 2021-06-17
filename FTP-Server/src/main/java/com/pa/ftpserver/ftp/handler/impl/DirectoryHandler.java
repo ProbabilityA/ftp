@@ -3,7 +3,7 @@ package com.pa.ftpserver.ftp.handler.impl;
 import com.pa.ftpserver.config.FunctionalProperties;
 import com.pa.ftpserver.ftp.constant.ResponseMessage;
 import com.pa.ftpserver.ftp.handler.Handler;
-import com.pa.ftpserver.ftp.task.InitiativeDataTransferTask;
+import com.pa.ftpserver.ftp.task.DataTransferTask;
 import com.pa.ftpserver.ftp.task.consumer.DirectoryConsumer;
 import com.pa.ftpserver.ftp.util.PreAuthorize;
 import com.pa.ftpserver.net.DataExecutorService;
@@ -35,12 +35,12 @@ public class DirectoryHandler implements Handler {
 
     @Override
     public String handle(String message, String principal) {
-        InitiativeDataTransferTask task = PortHandler.taskMap.get(principal);
+        DataTransferTask task = PortHandler.taskMap.remove(principal);
         if (task == null) {
             return ResponseMessage.CONNECTION_FAILED.getMessage();
         }
         File file = getFile(principal);
-        task.setConsumer(new DirectoryConsumer(file));
+        task.setSocketConsumer(new DirectoryConsumer(file));
         dataExecutorService.execute(task);
         return null;
     }
