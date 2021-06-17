@@ -32,7 +32,7 @@ public class DownloadHandler implements Handler {
         }
         File file = DirectoryHandler.getFile(principal);
         file = new File(file, message.substring(message.indexOf(' ') + 1));
-        if (!file.exists()) {
+        if (!file.exists() && !file.isFile()) {
             return ResponseMessage.FILE_NOT_FOUND.getMessage();
         }
         task.setConsumer(new DownloadConsumer(file));
