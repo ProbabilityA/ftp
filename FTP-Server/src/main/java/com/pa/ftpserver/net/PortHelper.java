@@ -3,9 +3,8 @@ package com.pa.ftpserver.net;
 import com.pa.ftpserver.net.properties.ServerPortProperties;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.net.Socket;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -37,15 +36,10 @@ public class PortHelper {
     }
 
     public boolean checkPort(int port) {
-        try {
-            // TODO: only work under linux with lsof
-            final Process exec = Runtime.getRuntime().exec("lsof -i:" + port);
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
-            if (reader.readLine() == null) {
-                return true;
-            }
+        try (Socket ignore = new Socket("127.0.0.1", port)) {
+            return false;
         } catch (IOException ignore) {
+            return true;
         }
-        return false;
     }
 }
