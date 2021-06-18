@@ -22,6 +22,7 @@ public enum ResponseMessage {
     NEED_ACCOUNT("332 Need account for login.\r\n"),
 
     CONNECTION_FAILED("425 Can't open data connection.\r\n"),
+    NO_SPACE("452 Requested action not taken, Insufficient storage space in system.\r\n"),
 
     INVALID_PARAM("501 Syntax error in parameters or arguments.\r\n"),
     NOT_SUPPORTED("502 Command not implemented.\r\n"),
@@ -29,6 +30,7 @@ public enum ResponseMessage {
     LOGIN_FAILED("530 Login or password incorrect!\r\n"),
     FILE_NOT_FOUND("550 Requested action not taken, file not found.\r\n"),
     DIRECTORY_NOT_FOUND("550 Requested action not taken, directory not found.\r\n"),
+    DUPLICATE_FILE_NAME("553 Requested action not taken, File name not allowed.\r\n"),
 
     TOO_MANY_USERS("10068 Too many users, server is full.\r\n")
     ;

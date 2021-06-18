@@ -1,13 +1,14 @@
 # FTP-Server
 
 ## Features
-- Authorization
+- Authorization (Common login, anonymous login, quit)
   - USER
   - PASS
   - QUIT
-- File operation
+- File operation (List files, change directory, upload and download file)
   - LIST
   - CWD
+  - STOR
   - RETR
 - Initiative mode and passive mode
   - PORT
