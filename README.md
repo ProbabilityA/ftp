@@ -5,9 +5,10 @@
   - USER
   - PASS
   - QUIT
-- File operation (List files, change directory, upload and download file)
+- File operation (List files, change directory, print working directory, upload and download file)
   - LIST
   - CWD
+  - PWD
   - STOR
   - RETR
 - Initiative mode and passive mode

@@ -17,6 +17,7 @@ public enum ResponseMessage {
     PASSIVE_MODE("227 Entering Passive Mode (%s,%d,%d)\r\n"),
     LOGIN_PROCEED("230 User logged in, proceed.\r\n"),
     CWD_SUCCESS("250 CWD command successful.\r\n"),
+    WORKING_DIRECTORY("257 \"%s\" is current directory.\r\n"),
 
     NEED_PASSWORD("331 User name okay, need password.\r\n"),
     NEED_ACCOUNT("332 Need account for login.\r\n"),
